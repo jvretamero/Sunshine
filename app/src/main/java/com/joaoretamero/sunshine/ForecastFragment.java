@@ -1,5 +1,6 @@
 package com.joaoretamero.sunshine;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,12 +14,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivityFragment extends Fragment {
+public class ForecastFragment extends Fragment {
 
-    private static final String TAG = MainActivityFragment.class.getSimpleName();
-    private WeatherApi weatherApi;
+    private static final String TAG = ForecastFragment.class.getSimpleName();
 
-    public MainActivityFragment() {
+    public ForecastFragment() {
     }
 
     @Override
@@ -38,13 +38,23 @@ public class MainActivityFragment extends Fragment {
         ListView listForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
         listForecast.setAdapter(arrayAdapter);
 
-        weatherApi = new WeatherApi();
-        try {
-            weatherApi.getJson();
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-        }
-
         return rootView;
+    }
+
+    private class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
+
+        private final String TAG = FetchWeatherTask.class.getSimpleName();
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            WeatherApi weatherApi = new WeatherApi();
+            try {
+                weatherApi.getJson();
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+            }
+
+            return null;
+        }
     }
 }
