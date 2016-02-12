@@ -2,16 +2,21 @@ package com.joaoretamero.sunshine;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivityFragment extends Fragment {
+
+    private static final String TAG = MainActivityFragment.class.getSimpleName();
+    private WeatherApi weatherApi;
 
     public MainActivityFragment() {
     }
@@ -32,6 +37,13 @@ public class MainActivityFragment extends Fragment {
 
         ListView listForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
         listForecast.setAdapter(arrayAdapter);
+
+        weatherApi = new WeatherApi();
+        try {
+            weatherApi.getJson();
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
 
         return rootView;
     }
