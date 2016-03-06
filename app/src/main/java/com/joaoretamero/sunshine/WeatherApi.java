@@ -1,5 +1,7 @@
 package com.joaoretamero.sunshine;
 
+import android.net.Uri;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,16 +14,18 @@ public class WeatherApi {
     public static final String UNIDADE_FAHRENHEIT = "imperial";
     public static final String TIPO_JSON = "json";
     public static final String TIPO_XML = "xml";
-    private static final String OPEN_WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast/daily";
-    private static final String ID_PIRACICABA = "3453643";
+    public static final String ID_PIRACICABA = "3453643";
+    private static final String OPEN_WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
+    private String idCidade;
     private String tipo;
-    private int dias;
+    private String dias;
     private String unidade;
 
     public WeatherApi() {
         tipo = TIPO_JSON;
-        dias = 7;
+        dias = "7";
         unidade = UNIDADE_CELCIUS;
+        idCidade = ID_PIRACICABA;
     }
 
     public String getTipo() {
@@ -32,11 +36,11 @@ public class WeatherApi {
         this.tipo = tipo;
     }
 
-    public int getDias() {
+    public String getDias() {
         return dias;
     }
 
-    public void setDias(int dias) {
+    public void setDias(String dias) {
         this.dias = dias;
     }
 
@@ -46,6 +50,14 @@ public class WeatherApi {
 
     public void setUnidade(String unidade) {
         this.unidade = unidade;
+    }
+
+    public String getIdCidade() {
+        return idCidade;
+    }
+
+    public void setIdCidade(String idCidade) {
+        this.idCidade = idCidade;
     }
 
     public String getJson() throws IOException {
@@ -92,20 +104,14 @@ public class WeatherApi {
     }
 
     private String getUrl() {
-        StringBuilder sb = new StringBuilder();
+        Uri.Builder builder = Uri.parse(OPEN_WEATHER_URL).buildUpon();
 
-        sb.append(OPEN_WEATHER_URL);
-        sb.append("?id=");
-        sb.append(ID_PIRACICABA);
-        sb.append("&mode=");
-        sb.append(tipo);
-        sb.append("&units=");
-        sb.append(unidade);
-        sb.append("&cnt=");
-        sb.append(dias);
-        sb.append("&appid=");
-        sb.append(BuildConfig.OPEN_WEATHER_API_KEY);
+        builder.appendQueryParameter("id", String.valueOf(idCidade));
+        builder.appendQueryParameter("mode", tipo);
+        builder.appendQueryParameter("units", unidade);
+        builder.appendQueryParameter("cnt", String.valueOf(dias));
+        builder.appendQueryParameter("appid", BuildConfig.OPEN_WEATHER_API_KEY);
 
-        return sb.toString();
+        return builder.toString();
     }
 }

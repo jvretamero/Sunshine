@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,24 +65,30 @@ public class ForecastFragment extends Fragment {
         switch (id) {
             case R.id.action_refresh:
                 FetchWeatherTask weatherTask = new FetchWeatherTask();
-                weatherTask.execute();
+                weatherTask.execute(WeatherApi.ID_PIRACICABA);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
+    private class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
         private final String TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String[] doInBackground(String... params) {
+            if (params.length == 0)
+                throw new IllegalArgumentException("O parâmetro é obrigatório");
+
             WeatherApi weatherApi = new WeatherApi();
+            weatherApi.setIdCidade(params[0]);
             try {
                 String json = weatherApi.getJson();
-                Log.d(TAG, json);
+                return WeatherDataParser.getWeatherDataFromJson(json, Integer.valueOf(weatherApi.getDias()));
             } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+            } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
             }
 
