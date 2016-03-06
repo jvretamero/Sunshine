@@ -10,8 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -23,7 +25,7 @@ public class ForecastFragment extends Fragment {
 
     private static final String TAG = ForecastFragment.class.getSimpleName();
 
-    private ArrayAdapter<String> mWeatherAdapter;
+    private ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -40,17 +42,25 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        List<String> listaClimaSemana = new ArrayList<String>();
-        listaClimaSemana.add("Hoje - Sol - 35/25");
-        listaClimaSemana.add("Amanhã - Chuva - 20/10");
+        List<String> weekForecast = new ArrayList<String>();
+        weekForecast.add("Hoje - Sol - 35/25");
+        weekForecast.add("Amanhã - Chuva - 20/10");
 
-        mWeatherAdapter = new ArrayAdapter<String>(getActivity(),
+        mForecastAdapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
-                listaClimaSemana);
+                weekForecast);
 
         ListView listForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
-        listForecast.setAdapter(mWeatherAdapter);
+        listForecast.setAdapter(mForecastAdapter);
+        listForecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String forecast = mForecastAdapter.getItem(position);
+                Toast toastForecast = Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT);
+                toastForecast.show();
+            }
+        });
 
         return rootView;
     }
@@ -88,6 +98,8 @@ public class ForecastFragment extends Fragment {
             try {
                 String json = weatherApi.getJson();
                 String[] days = WeatherDataParser.getWeatherDataFromJson(json, Integer.valueOf(weatherApi.getDias()));
+
+                return days;
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
             } catch (JSONException e) {
@@ -102,10 +114,9 @@ public class ForecastFragment extends Fragment {
             if (days == null)
                 return;
 
-            mWeatherAdapter.clear();
+            mForecastAdapter.clear();
             for (String day : days)
-                mWeatherAdapter.add(day);
-            mWeatherAdapter.notifyDataSetChanged();
+                mForecastAdapter.add(day);
         }
     }
 }
