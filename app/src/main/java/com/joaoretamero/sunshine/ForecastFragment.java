@@ -23,6 +23,8 @@ public class ForecastFragment extends Fragment {
 
     private static final String TAG = ForecastFragment.class.getSimpleName();
 
+    private ArrayAdapter<String> mWeatherAdapter;
+
     public ForecastFragment() {
     }
 
@@ -42,13 +44,13 @@ public class ForecastFragment extends Fragment {
         listaClimaSemana.add("Hoje - Sol - 35/25");
         listaClimaSemana.add("Amanhã - Chuva - 20/10");
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
+        mWeatherAdapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
                 listaClimaSemana);
 
         ListView listForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
-        listForecast.setAdapter(arrayAdapter);
+        listForecast.setAdapter(mWeatherAdapter);
 
         return rootView;
     }
@@ -85,7 +87,7 @@ public class ForecastFragment extends Fragment {
             weatherApi.setIdCidade(params[0]);
             try {
                 String json = weatherApi.getJson();
-                return WeatherDataParser.getWeatherDataFromJson(json, Integer.valueOf(weatherApi.getDias()));
+                String[] days = WeatherDataParser.getWeatherDataFromJson(json, Integer.valueOf(weatherApi.getDias()));
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
             } catch (JSONException e) {
@@ -93,6 +95,17 @@ public class ForecastFragment extends Fragment {
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] days) {
+            if (days == null)
+                return;
+
+            mWeatherAdapter.clear();
+            for (String day : days)
+                mWeatherAdapter.add(day);
+            mWeatherAdapter.notifyDataSetChanged();
         }
     }
 }

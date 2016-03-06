@@ -1,7 +1,6 @@
 package com.joaoretamero.sunshine;
 
 import android.text.format.Time;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,10 +104,6 @@ public class WeatherDataParser {
             resultStrs[i] = day + " - " + description + " - " + highAndLow;
         }
 
-        for (String s : resultStrs) {
-            Log.v(TAG, "Forecast entry: " + s);
-        }
         return resultStrs;
-
     }
 }
