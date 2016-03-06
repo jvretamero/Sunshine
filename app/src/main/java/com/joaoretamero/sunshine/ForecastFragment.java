@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -19,6 +22,13 @@ public class ForecastFragment extends Fragment {
     private static final String TAG = ForecastFragment.class.getSimpleName();
 
     public ForecastFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -41,6 +51,25 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.forecastfragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_refresh:
+                FetchWeatherTask weatherTask = new FetchWeatherTask();
+                weatherTask.execute();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
 
         private final String TAG = FetchWeatherTask.class.getSimpleName();
@@ -49,7 +78,8 @@ public class ForecastFragment extends Fragment {
         protected Void doInBackground(Void... params) {
             WeatherApi weatherApi = new WeatherApi();
             try {
-                weatherApi.getJson();
+                String json = weatherApi.getJson();
+                Log.d(TAG, json);
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
             }
