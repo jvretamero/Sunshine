@@ -2,13 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.joaoretamero.sunshine.MainActivity">
+    tools:context="com.joaoretamero.sunshine.DetailFragment">
 
-    <fragment
-        android:id="@+id/fragment_main"
-        android:name="com.joaoretamero.sunshine.ForecastFragment"
+    <TextView
+        android:id="@+id/detail_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_main" />
+        android:text="@string/hello_blank_fragment" />
 
 </RelativeLayout>
