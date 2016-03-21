@@ -21,7 +21,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ForecastFragment extends Fragment {
 
@@ -44,14 +43,10 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        List<String> weekForecast = new ArrayList<String>();
-        weekForecast.add("Hoje - Sol - 35/25");
-        weekForecast.add("Amanhã - Chuva - 20/10");
-
         mForecastAdapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
-                weekForecast);
+                new ArrayList<String>());
 
         final ListView listForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
         listForecast.setAdapter(mForecastAdapter);
@@ -70,6 +65,12 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.forecast_fragment_menu, menu);
     }
@@ -80,17 +81,21 @@ public class ForecastFragment extends Fragment {
 
         switch (id) {
             case R.id.action_refresh:
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String preferenceKey = getString(R.string.pref_location_key);
-                String preferenceDefaultValue = getString(R.string.pref_location_default_value);
-                String idCidade = sharedPreferences.getString(preferenceKey, preferenceDefaultValue);
-
-                FetchWeatherTask weatherTask = new FetchWeatherTask();
-                weatherTask.execute(idCidade);
+                updateWeather();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void updateWeather() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String preferenceKey = getString(R.string.pref_location_key);
+        String preferenceDefaultValue = getString(R.string.pref_location_default_value);
+        String idCidade = sharedPreferences.getString(preferenceKey, preferenceDefaultValue);
+
+        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        weatherTask.execute(idCidade);
     }
 
     private class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
