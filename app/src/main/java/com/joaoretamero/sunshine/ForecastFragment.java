@@ -1,8 +1,10 @@
 package com.joaoretamero.sunshine;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,8 +80,13 @@ public class ForecastFragment extends Fragment {
 
         switch (id) {
             case R.id.action_refresh:
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String preferenceKey = getString(R.string.pref_location_key);
+                String preferenceDefaultValue = getString(R.string.pref_location_default_value);
+                String idCidade = sharedPreferences.getString(preferenceKey, preferenceDefaultValue);
+
                 FetchWeatherTask weatherTask = new FetchWeatherTask();
-                weatherTask.execute(WeatherApi.ID_PIRACICABA);
+                weatherTask.execute(idCidade);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

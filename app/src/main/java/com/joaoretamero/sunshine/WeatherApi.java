@@ -14,7 +14,6 @@ public class WeatherApi {
     public static final String UNIDADE_FAHRENHEIT = "imperial";
     public static final String TIPO_JSON = "json";
     public static final String TIPO_XML = "xml";
-    public static final String ID_PIRACICABA = "3453643";
     private static final String OPEN_WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
     private String idCidade;
     private String tipo;
@@ -25,7 +24,6 @@ public class WeatherApi {
         tipo = TIPO_JSON;
         dias = "7";
         unidade = UNIDADE_CELCIUS;
-        idCidade = ID_PIRACICABA;
     }
 
     public String getTipo() {
