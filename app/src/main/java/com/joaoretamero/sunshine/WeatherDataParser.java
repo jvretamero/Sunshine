@@ -1,6 +1,10 @@
 package com.joaoretamero.sunshine;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,6 +15,11 @@ import java.text.SimpleDateFormat;
 public class WeatherDataParser {
 
     private static final String TAG = WeatherDataParser.class.getSimpleName();
+    private Context context;
+
+    public WeatherDataParser(Context context) {
+        this.context = context;
+    }
 
     /* The date/time conversion code is going to be moved outside the asynctask later,
          * so for convenience we're breaking it out into its own method now.
@@ -25,7 +34,14 @@ public class WeatherDataParser {
     /**
      * Prepare the weather high/lows for presentation.
      */
-    private static String formatHighLows(double high, double low) {
+    private String formatHighLows(double high, double low, String unitType) {
+        if (unitType.equals(context.getString(R.string.pref_unit_imperial_key))) {
+            high = (high * 1.8) + 32;
+            low = (low * 1.8) + 32;
+        } else if (!unitType.equals(context.getString(R.string.pref_unit_metric_key))) {
+            Log.e(TAG, "Unit type not found: " + unitType);
+        }
+
         // For presentation, assume the user doesn't care about tenths of a degree.
         long roundedHigh = Math.round(high);
         long roundedLow = Math.round(low);
@@ -41,7 +57,7 @@ public class WeatherDataParser {
      * Fortunately parsing is easy:  constructor takes the JSON string and converts it
      * into an Object hierarchy for us.
      */
-    public static String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
+    public String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
             throws JSONException {
 
         // These are the names of the JSON objects that need to be extracted.
@@ -73,6 +89,11 @@ public class WeatherDataParser {
         dayTime = new Time();
 
         String[] resultStrs = new String[numDays];
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String prefUnitKey = context.getString(R.string.pref_unit_key);
+        String prefUnitDefaultValue = context.getString(R.string.pref_unit_default_value);
+        String unitType = sharedPreferences.getString(prefUnitKey, prefUnitDefaultValue);
+
         for (int i = 0; i < weatherArray.length(); i++) {
             // For now, using the format "Day, description, hi/low"
             String day;
@@ -100,7 +121,7 @@ public class WeatherDataParser {
             double high = temperatureObject.getDouble(OWM_MAX);
             double low = temperatureObject.getDouble(OWM_MIN);
 
-            highAndLow = formatHighLows(high, low);
+            highAndLow = formatHighLows(high, low, unitType);
             resultStrs[i] = day + " - " + description + " - " + highAndLow;
         }
 

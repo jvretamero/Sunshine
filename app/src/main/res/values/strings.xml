@@ -3,7 +3,26 @@
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
 
+    <string name="pref_unit_metric_label">Celcius</string>
+    <string name="pref_unit_metric_key">metric</string>
+    <string name="pref_unit_imperial_label">Fahrenheit</string>
+    <string name="pref_unit_imperial_key">imperial</string>
+
+    <string-array name="pref_units_options">
+        <item>@string/pref_unit_metric_label</item>
+        <item>@string/pref_unit_imperial_label</item>
+    </string-array>
+
+    <string-array name="pref_units_values">
+        <item>@string/pref_unit_metric_key</item>
+        <item>@string/pref_unit_imperial_key</item>
+    </string-array>
+
     <string name="pref_location_label">Location</string>
     <string name="pref_location_key" translatable="false">location</string>
     <string name="pref_location_default_value" translatable="false">3453643</string>
+
+    <string name="pref_unit_label">Unit</string>
+    <string name="pref_unit_key">unit</string>
+    <string name="pref_unit_default_value">@string/pref_unit_metric_key</string>
 </resources>

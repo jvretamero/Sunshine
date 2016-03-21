@@ -90,12 +90,13 @@ public class ForecastFragment extends Fragment {
 
     private void updateWeather() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String preferenceKey = getString(R.string.pref_location_key);
-        String preferenceDefaultValue = getString(R.string.pref_location_default_value);
-        String idCidade = sharedPreferences.getString(preferenceKey, preferenceDefaultValue);
+        String idCidade = sharedPreferences
+                .getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default_value));
+        String unitType = sharedPreferences
+                .getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_default_value));
 
         FetchWeatherTask weatherTask = new FetchWeatherTask();
-        weatherTask.execute(idCidade);
+        weatherTask.execute(idCidade, unitType);
     }
 
     private class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
@@ -104,14 +105,16 @@ public class ForecastFragment extends Fragment {
 
         @Override
         protected String[] doInBackground(String... params) {
-            if (params.length == 0)
+            if (params.length != 2)
                 throw new IllegalArgumentException("O parâmetro é obrigatório");
 
             WeatherApi weatherApi = new WeatherApi();
             weatherApi.setIdCidade(params[0]);
+            weatherApi.setUnidade(params[1]);
             try {
                 String json = weatherApi.getJson();
-                String[] days = WeatherDataParser.getWeatherDataFromJson(json, Integer.valueOf(weatherApi.getDias()));
+                String[] days = new WeatherDataParser(getActivity())
+                        .getWeatherDataFromJson(json, Integer.valueOf(weatherApi.getDias()));
 
                 return days;
             } catch (IOException e) {
