@@ -2,11 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.joaoretamero.sunshine.MainActivity">
+    tools:context=".main.MainActivity">
 
     <fragment
         android:id="@+id/fragment_main"
-        android:name="com.joaoretamero.sunshine.ForecastFragment"
+        android:name="com.joaoretamero.sunshine.main.ForecastFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_main" />

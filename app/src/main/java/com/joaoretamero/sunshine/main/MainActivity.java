@@ -1,4 +1,4 @@
-package com.joaoretamero.sunshine;
+package com.joaoretamero.sunshine.main;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.joaoretamero.sunshine.R;
+import com.joaoretamero.sunshine.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 

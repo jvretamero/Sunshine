@@ -1,6 +1,8 @@
-package com.joaoretamero.sunshine;
+package com.joaoretamero.sunshine.api;
 
 import android.net.Uri;
+
+import com.joaoretamero.sunshine.BuildConfig;
 
 import java.io.BufferedReader;
 import java.io.IOException;

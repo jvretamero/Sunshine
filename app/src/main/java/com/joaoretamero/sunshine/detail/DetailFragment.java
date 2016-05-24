@@ -1,4 +1,4 @@
-package com.joaoretamero.sunshine;
+package com.joaoretamero.sunshine.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.joaoretamero.sunshine.R;
 
 
 public class DetailFragment extends Fragment {

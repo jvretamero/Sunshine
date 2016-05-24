@@ -1,4 +1,4 @@
-package com.joaoretamero.sunshine;
+package com.joaoretamero.sunshine.main;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +16,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.joaoretamero.sunshine.R;
+import com.joaoretamero.sunshine.api.WeatherApi;
+import com.joaoretamero.sunshine.api.WeatherDataParser;
+import com.joaoretamero.sunshine.detail.DetailActivity;
 
 import org.json.JSONException;
 

@@ -1,10 +1,12 @@
-package com.joaoretamero.sunshine;
+package com.joaoretamero.sunshine.api;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
+
+import com.joaoretamero.sunshine.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
