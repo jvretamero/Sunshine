@@ -1,5 +1,6 @@
 package com.joaoretamero.sunshine.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
@@ -76,23 +77,7 @@ public class TestDb extends AndroidTestCase {
     }
 
     public void testLocationTable() {
-        // First step: Get reference to writable database
-
-        // Create ContentValues of what you want to insert
-        // (you can use the createNorthPoleLocationValues if you wish)
-
-        // Insert ContentValues into database and get a row ID back
-
-        // Query the database and receive a Cursor back
-
-        // Move the cursor to a valid database row
-
-        // Validate data in resulting Cursor with the original ContentValues
-        // (you can use the validateCurrentRecord function in TestUtilities to validate the
-        // query if you like)
-
-        // Finally, close the cursor and database
-
+        insertLocation();
     }
 
     public void testWeatherTable() {
@@ -104,25 +89,72 @@ public class TestDb extends AndroidTestCase {
         // tests. Why move it? We need the code to return the ID of the inserted location
         // and our testLocationTable can only return void because it's a test.
 
+        long locationId = insertLocation();
+
+        assertFalse(locationId == -1);
+
         // First step: Get reference to writable database
+        WeatherDbHelper helper = new WeatherDbHelper(mContext);
+        SQLiteDatabase db = helper.getWritableDatabase();
 
         // Create ContentValues of what you want to insert
         // (you can use the createWeatherValues TestUtilities function if you wish)
+        ContentValues values = TestUtilities.createWeatherValues(locationId);
 
         // Insert ContentValues into database and get a row ID back
+        long rowId = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null, values);
+
+        assertTrue(rowId != -1);
 
         // Query the database and receive a Cursor back
+        Cursor cursor = db.query(WeatherContract.WeatherEntry.TABLE_NAME, null, null, null, null, null, null);
 
         // Move the cursor to a valid database row
+        assertTrue(cursor.moveToFirst());
 
         // Validate data in resulting Cursor with the original ContentValues
         // (you can use the validateCurrentRecord function in TestUtilities to validate the
         // query if you like)
+        TestUtilities.validateCursor("", cursor, values);
 
         // Finally, close the cursor and database
+        cursor.close();
+        db.close();
     }
 
     public long insertLocation() {
-        return -1L;
+        // First step: Get reference to writable database
+        WeatherDbHelper helper = new WeatherDbHelper(mContext);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        // Create ContentValues of what you want to insert
+        // (you can use the createNorthPoleLocationValues if you wish)
+        ContentValues values = new ContentValues();
+        values.put(WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING, "99705");
+        values.put(WeatherContract.LocationEntry.COLUMN_CITY_NAME, "Just Test");
+        values.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT, 68.72);
+        values.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, -143.33);
+
+        // Insert ContentValues into database and get a row ID back
+        long rowId = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, values);
+
+        assertTrue(rowId != -1);
+
+        // Query the database and receive a Cursor back
+        Cursor cursor = db.query(WeatherContract.LocationEntry.TABLE_NAME, null, null, null, null, null, null);
+
+        // Move the cursor to a valid database row
+        assertTrue(cursor.moveToFirst());
+
+        // Validate data in resulting Cursor with the original ContentValues
+        // (you can use the validateCurrentRecord function in TestUtilities to validate the
+        // query if you like)
+        TestUtilities.validateCursor("Valores do banco incorretos", cursor, values);
+
+        // Finally, close the cursor and database
+        cursor.close();
+        db.close();
+
+        return rowId;
     }
 }
