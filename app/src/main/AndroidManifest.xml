@@ -27,6 +27,10 @@
         <activity
             android:name=".settings.SettingsActivity"
             android:parentActivityName=".main.MainActivity"></activity>
+
+        <provider
+            android:name=".data.WeatherProvider"
+            android:authorities="com.joaoretamero.sunshine" />
     </application>
 
 </manifest>
