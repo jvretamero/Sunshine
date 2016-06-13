@@ -12,15 +12,38 @@ import android.view.MenuItem;
 
 import com.joaoretamero.sunshine.R;
 import com.joaoretamero.sunshine.settings.SettingsActivity;
+import com.joaoretamero.sunshine.util.Utility;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String FRAGMENT_TAG = "forecast";
+    private String mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mLocation = Utility.getPreferredLocation(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, new ForecastFragment(), FRAGMENT_TAG)
+                    .commit();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String location = Utility.getPreferredLocation(this);
+        if (location != null && !location.equals(mLocation)) {
+            ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            if (forecastFragment != null) {
+                forecastFragment.onLocationChanged();
+            }
+            mLocation = location;
+        }
     }
 
     @Override

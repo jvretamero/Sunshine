@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.joaoretamero.sunshine.R;
+import com.joaoretamero.sunshine.data.WeatherContract;
 import com.joaoretamero.sunshine.util.Utility;
 
 /**
@@ -34,10 +35,10 @@ public class ForecastAdapter extends CursorAdapter {
         string.
      */
     private String convertCursorRowToUXFormat(Cursor cursor) {
-        String highAndLow = formatHighLows(cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP), cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP));
+        String highAndLow = formatHighLows(cursor.getDouble(WeatherContract.Forecast.COL_WEATHER_MAX_TEMP), cursor.getDouble(WeatherContract.Forecast.COL_WEATHER_MIN_TEMP));
 
-        return Utility.formatDate(cursor.getLong(ForecastFragment.COL_WEATHER_DATE)) +
-                " - " + cursor.getString(ForecastFragment.COL_WEATHER_DESC) +
+        return Utility.formatDate(cursor.getLong(WeatherContract.Forecast.COL_WEATHER_DATE)) +
+                " - " + cursor.getString(WeatherContract.Forecast.COL_WEATHER_DESC) +
                 " - " + highAndLow;
     }
 

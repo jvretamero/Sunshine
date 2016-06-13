@@ -22,7 +22,7 @@
 
     <string name="pref_location_label">Location</string>
     <string name="pref_location_key" translatable="false">location</string>
-    <string name="pref_location_default_value" translatable="false">3453643</string>
+    <string name="pref_location_default_value" translatable="false">524901</string>
 
     <string name="pref_unit_label">Unit</string>
     <string name="pref_unit_key">unit</string>
