@@ -96,8 +96,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         String dateString = Utility.formatDate(data.getLong(WeatherContract.Forecast.COL_WEATHER_DATE));
         String weatherDesc = data.getString(WeatherContract.Forecast.COL_WEATHER_DESC);
         boolean isMetric = Utility.isMetric(getActivity());
-        String high = Utility.formatTemperature(data.getDouble(WeatherContract.Forecast.COL_WEATHER_MAX_TEMP), isMetric);
-        String low = Utility.formatTemperature(data.getDouble(WeatherContract.Forecast.COL_WEATHER_MIN_TEMP), isMetric);
+        String high = Utility.formatTemperature(getActivity(), data.getDouble(WeatherContract.Forecast.COL_WEATHER_MAX_TEMP), isMetric);
+        String low = Utility.formatTemperature(getActivity(), data.getDouble(WeatherContract.Forecast.COL_WEATHER_MIN_TEMP), isMetric);
 
         forecastStr = String.format("%s - %s - %s/%s", dateString, weatherDesc, high, low);
 
