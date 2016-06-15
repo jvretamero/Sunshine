@@ -6,33 +6,24 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.joaoretamero.sunshine.R;
 import com.joaoretamero.sunshine.data.WeatherContract;
 import com.joaoretamero.sunshine.util.Utility;
 
-/**
- * {@link ForecastAdapter} exposes a list of weather forecasts
- * from a {@link android.database.Cursor} to a {@link android.widget.ListView}.
- */
 public class ForecastAdapter extends CursorAdapter {
     public ForecastAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
-    /**
-     * Prepare the weather high/lows for presentation.
-     */
     private String formatHighLows(double high, double low) {
         boolean isMetric = Utility.isMetric(mContext);
         String highLowStr = Utility.formatTemperature(high, isMetric) + "/" + Utility.formatTemperature(low, isMetric);
         return highLowStr;
     }
 
-    /*
-        This is ported from FetchWeatherTask --- but now we go straight from the cursor to the
-        string.
-     */
     private String convertCursorRowToUXFormat(Cursor cursor) {
         String highAndLow = formatHighLows(cursor.getDouble(WeatherContract.Forecast.COL_WEATHER_MAX_TEMP), cursor.getDouble(WeatherContract.Forecast.COL_WEATHER_MIN_TEMP));
 
@@ -41,25 +32,31 @@ public class ForecastAdapter extends CursorAdapter {
                 " - " + highAndLow;
     }
 
-    /*
-        Remember that these views are reused as needed.
-     */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_forecast, parent, false);
-
-        return view;
+        return LayoutInflater.from(context).inflate(R.layout.list_item_forecast, parent, false);
     }
 
-    /*
-        This is where we fill-in the views with the contents of the cursor.
-     */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        // our view is pretty simple here --- just a text view
-        // we'll keep the UI functional with a simple (and slow!) binding.
+        ImageView icon = (ImageView) view.findViewById(R.id.list_item_icon);
+        icon.setImageResource(R.mipmap.ic_launcher);
 
-//        TextView tv = (TextView) view;
-//        tv.setText(convertCursorRowToUXFormat(cursor));
+        long dateTimeInMillis = cursor.getLong(WeatherContract.Forecast.COL_WEATHER_DATE);
+        TextView textDate = (TextView) view.findViewById(R.id.list_item_date_textview);
+        textDate.setText(Utility.getFriendlyDayString(context, dateTimeInMillis));
+
+        TextView textForecast = (TextView) view.findViewById(R.id.list_item_forecast_textview);
+        textForecast.setText(cursor.getString(WeatherContract.Forecast.COL_WEATHER_DESC));
+
+        boolean isMetric = Utility.isMetric(context);
+
+        double high = cursor.getDouble(WeatherContract.Forecast.COL_WEATHER_MAX_TEMP);
+        TextView textHigh = (TextView) view.findViewById(R.id.list_item_high_textview);
+        textHigh.setText(Utility.formatTemperature(high, isMetric));
+
+        double low = cursor.getDouble(WeatherContract.Forecast.COL_WEATHER_MIN_TEMP);
+        TextView textLow = (TextView) view.findViewById(R.id.list_item_low_textview);
+        textLow.setText(Utility.formatTemperature(low, isMetric));
     }
 }

@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import com.joaoretamero.sunshine.R;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Utility {
@@ -37,5 +39,27 @@ public class Utility {
     public static String formatDate(long dateInMillis) {
         Date date = new Date(dateInMillis);
         return DateFormat.getDateInstance().format(date);
+    }
+
+    public static String getFriendlyDayString(Context context, long dateTimeInMillis) {
+        Calendar calendar = Calendar.getInstance();
+        int currentJulianDay = calendar.get(Calendar.DAY_OF_YEAR);
+        calendar.setTimeInMillis(dateTimeInMillis);
+        int julianDay = calendar.get(Calendar.DAY_OF_YEAR);
+
+        if (currentJulianDay == julianDay) {
+            SimpleDateFormat monthDayFormat = new SimpleDateFormat("MMM dd");
+            String today = context.getString(R.string.today);
+            String stringToFormat = context.getString(R.string.format_full_friendly_date);
+            return String.format(stringToFormat, today, monthDayFormat.format(dateTimeInMillis));
+        } else if (julianDay == currentJulianDay + 1) {
+            return context.getString(R.string.tomorrow);
+        } else if (julianDay < currentJulianDay + 7) {
+            SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
+            return dayFormat.format(dateTimeInMillis);
+        } else {
+            SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MM dd");
+            return shortenedDateFormat.format(dateTimeInMillis);
+        }
     }
 }
