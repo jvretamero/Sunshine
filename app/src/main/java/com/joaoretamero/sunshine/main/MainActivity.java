@@ -11,13 +11,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.joaoretamero.sunshine.R;
+import com.joaoretamero.sunshine.detail.DetailActivity;
 import com.joaoretamero.sunshine.detail.DetailFragment;
 import com.joaoretamero.sunshine.settings.SettingsActivity;
 import com.joaoretamero.sunshine.util.Utility;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String DETAIL_FRAGMENT_TAG = "det_frag_tag";
     private String mLocation;
     private boolean mTwoPane = false;
 
@@ -49,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
             if (forecastFragment != null) {
                 forecastFragment.onLocationChanged();
             }
+
+            DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DETAIL_FRAGMENT_TAG);
+            if (detailFragment != null) {
+                detailFragment.onLocationChanged(location);
+            }
+
             mLocation = location;
         }
     }
@@ -89,6 +97,26 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             Log.d(TAG, "openPreferredLocationInMap: Não foi possível exibir no mapa (" + location + ")");
+        }
+    }
+
+    @Override
+    public void onItemSelected(Uri dateUri) {
+        if (mTwoPane) {
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, dateUri);
+
+            DetailFragment detailFragment = new DetailFragment();
+            detailFragment.setArguments(args);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, detailFragment, DETAIL_FRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.setData(dateUri);
+            startActivity(intent);
         }
     }
 }

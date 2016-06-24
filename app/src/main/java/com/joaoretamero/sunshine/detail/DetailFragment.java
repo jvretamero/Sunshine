@@ -2,6 +2,7 @@ package com.joaoretamero.sunshine.detail;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,7 @@ import com.joaoretamero.sunshine.util.Utility;
 
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final String DETAIL_URI = "detail_uri";
     public static final int COL_WEATHER_ID = 0;
     public static final int COL_WEATHER_DATE = 1;
     public static final int COL_WEATHER_DESC = 2;
@@ -63,6 +65,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mHumidityView;
     private TextView mWindView;
     private TextView mPressureView;
+    private Uri mUri;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -75,6 +78,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        if (args != null) {
+            mUri = args.getParcelable(DETAIL_URI);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
@@ -122,14 +130,22 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
     }
 
+    public void onLocationChanged(String newLocation) {
+        if (mUri != null) {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(mUri);
+            mUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Intent intent = getActivity().getIntent();
+        if (mUri != null) {
+            return new CursorLoader(getActivity(), mUri, DETAIL_COLUMNS, null, null, null);
+        }
 
-        if (intent == null || intent.getData() == null)
-            return null;
-
-        return new CursorLoader(getActivity(), intent.getData(), DETAIL_COLUMNS, null, null, null);
+        return null;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.joaoretamero.sunshine.main;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -22,7 +21,6 @@ import android.widget.ListView;
 
 import com.joaoretamero.sunshine.R;
 import com.joaoretamero.sunshine.data.WeatherContract;
-import com.joaoretamero.sunshine.detail.DetailActivity;
 import com.joaoretamero.sunshine.task.FetchWeatherTask;
 import com.joaoretamero.sunshine.util.Utility;
 
@@ -61,9 +59,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                     String location = Utility.getPreferredLocation(getActivity());
                     Uri uri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(location, cursor.getLong(WeatherContract.Forecast.COL_WEATHER_DATE));
 
-                    Intent intent = new Intent(getActivity(), DetailActivity.class);
-                    intent.setData(uri);
-                    startActivity(intent);
+                    Callback callback = (Callback) getActivity();
+                    callback.onItemSelected(uri);
                 }
             }
         });
@@ -132,5 +129,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mForecastAdapter.swapCursor(null);
+    }
+
+    public interface Callback {
+        public void onItemSelected(Uri dateUri);
     }
 }

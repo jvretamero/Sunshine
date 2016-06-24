@@ -3,7 +3,6 @@ package com.joaoretamero.sunshine.detail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,43 +19,17 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         if (savedInstanceState == null) {
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
+
+            DetailFragment detailFragment = new DetailFragment();
+            detailFragment.setArguments(args);
+
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.container, new DetailFragment())
+                    .add(R.id.container, detailFragment)
                     .commit();
         }
-
-        Log.d(TAG, "onCreate: x");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: x");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: x");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop: x");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: x");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause: x");
     }
 
     @Override
