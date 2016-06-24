@@ -137,7 +137,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         if (!data.moveToFirst())
             return;
 
-        mIconView.setImageResource(R.mipmap.ic_launcher);
+        int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
+        mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
         long dateInMillis = data.getLong(COL_WEATHER_DATE);
         String dayName = Utility.getDayName(getActivity(), dateInMillis);
