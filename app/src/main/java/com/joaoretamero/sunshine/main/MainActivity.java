@@ -11,25 +11,32 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.joaoretamero.sunshine.R;
+import com.joaoretamero.sunshine.detail.DetailFragment;
 import com.joaoretamero.sunshine.settings.SettingsActivity;
 import com.joaoretamero.sunshine.util.Utility;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String FRAGMENT_TAG = "forecast";
     private String mLocation;
+    private boolean mTwoPane = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mLocation = Utility.getPreferredLocation(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.fragment_container, new ForecastFragment(), FRAGMENT_TAG)
-                    .commit();
+
+        mLocation = Utility.getPreferredLocation(this);
+        mTwoPane = (findViewById(R.id.container) != null);
+
+        if (mTwoPane) {
+            if (savedInstanceState == null) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, new DetailFragment())
+                        .commit();
+            }
         }
     }
 
@@ -38,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         String location = Utility.getPreferredLocation(this);
         if (location != null && !location.equals(mLocation)) {
-            ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
             if (forecastFragment != null) {
                 forecastFragment.onLocationChanged();
             }
