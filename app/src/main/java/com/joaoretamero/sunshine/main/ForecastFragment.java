@@ -28,8 +28,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     private static final String TAG = ForecastFragment.class.getSimpleName();
     private static final int LOADER_ID = 0;
+    private static final String SELECTED_KEY = "selected_position";
 
     private ForecastAdapter mForecastAdapter;
+    private ListView mListForecast;
+    private int mPosition = ListView.INVALID_POSITION;
 
     public ForecastFragment() {
     }
@@ -42,15 +45,14 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
-        final ListView listForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
-        listForecast.setAdapter(mForecastAdapter);
-        listForecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListForecast = (ListView) rootView.findViewById(R.id.listview_forecast);
+        mListForecast.setAdapter(mForecastAdapter);
+        mListForecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
@@ -62,10 +64,24 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                     Callback callback = (Callback) getActivity();
                     callback.onItemSelected(uri);
                 }
+
+                mPosition = position;
             }
         });
 
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
+
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mPosition != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -124,6 +140,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mForecastAdapter.swapCursor(data);
+        if (mPosition != ListView.INVALID_POSITION) {
+            mListForecast.smoothScrollToPosition(mPosition);
+        }
     }
 
     @Override
