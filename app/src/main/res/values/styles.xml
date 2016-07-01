@@ -14,6 +14,8 @@
         <item name="logo">@drawable/ic_logo</item>
     </style>
 
+    <style name="SettingsTheme" parent="AppTheme"></style>
+
     <style name="ForecastListStyle">
         <item name="android:choiceMode">singleChoice</item>
     </style>

@@ -23,10 +23,11 @@
         </activity>
         <activity
             android:name=".detail.DetailActivity"
-            android:parentActivityName=".main.MainActivity"></activity>
+            android:parentActivityName=".main.MainActivity" />
         <activity
             android:name=".settings.SettingsActivity"
-            android:parentActivityName=".main.MainActivity"></activity>
+            android:parentActivityName=".main.MainActivity"
+            android:theme="@style/SettingsTheme" />
 
         <provider
             android:name=".data.WeatherProvider"
