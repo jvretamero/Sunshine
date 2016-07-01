@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
                         .commit();
             }
         }
+
+        ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+        forecastFragment.setUseTodayLayout(!mTwoPane);
     }
 
     @Override
