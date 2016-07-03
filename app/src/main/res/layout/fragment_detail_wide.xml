@@ -18,13 +18,17 @@
             <!-- Header: Day, Date -->
             <TextView
                 android:id="@+id/detail_day_textview"
+                style="@style/Text.Day"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="day" />
 
             <TextView
                 android:id="@+id/detail_date_textview"
+                style="@style/Text.Date"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="date" />
 
         </LinearLayout>
 
@@ -37,46 +41,60 @@
 
             <TextView
                 android:id="@+id/detail_high_textview"
+                style="@style/Text.High"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="32" />
 
             <TextView
                 android:id="@+id/detail_low_textview"
+                style="@style/Text.Low"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="12" />
 
             <!-- Humidity, wind, pressure -->
             <TextView
                 android:id="@+id/detail_humidity_textview"
+                style="@style/Text.Other"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="humidity" />
 
             <TextView
                 android:id="@+id/detail_pressure_textview"
+                style="@style/Text.Other"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="pressure" />
 
             <TextView
                 android:id="@+id/detail_wind_textview"
+                style="@style/Text.Other"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="wind" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/detail_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_launcher" />
 
             <TextView
                 android:id="@+id/detail_forecast_textview"
+                style="@style/Text.Forecast"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="forecast" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
