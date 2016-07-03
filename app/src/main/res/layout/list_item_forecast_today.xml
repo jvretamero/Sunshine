@@ -59,11 +59,11 @@
 
         <TextView
             android:id="@+id/list_item_forecast_textview"
-            style="@style/TextForecast"
+            style="@style/Text.Forecast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </LinearLayout>

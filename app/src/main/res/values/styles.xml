@@ -20,9 +20,42 @@
         <item name="android:choiceMode">singleChoice</item>
     </style>
 
-    <style name="TextForecast">
+    <style name="Text" parent="@style/TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Text.Forecast" parent="Text">
         <item name="android:fontFamily">sans-serif-condensed</item>
         <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/grey_700</item>
+    </style>
+
+    <style name="Text.Day" parent="Text">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Text.Date" parent="Text">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/grey_700</item>
+    </style>
+
+    <style name="Text.High" parent="Text">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">96sp</item>
+    </style>
+
+    <style name="Text.Low" parent="Text">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">48sp</item>
+        <item name="android:textColor">@color/grey_700</item>
+    </style>
+
+    <style name="Text.Other" parent="Text">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:layout_marginTop">4dp</item>
     </style>
 
 </resources>
