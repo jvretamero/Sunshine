@@ -32,6 +32,10 @@
         <provider
             android:name=".data.WeatherProvider"
             android:authorities="com.joaoretamero.sunshine" />
+
+        <service
+            android:name=".service.SunshineService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

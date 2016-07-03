@@ -1,10 +1,9 @@
 package com.joaoretamero.sunshine.main;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -21,7 +20,7 @@ import android.widget.ListView;
 
 import com.joaoretamero.sunshine.R;
 import com.joaoretamero.sunshine.data.WeatherContract;
-import com.joaoretamero.sunshine.task.FetchWeatherTask;
+import com.joaoretamero.sunshine.service.SunshineService;
 import com.joaoretamero.sunshine.util.Utility;
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -113,18 +112,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateWeather() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = Utility.getPreferredLocation(getActivity());
 
-        String idCidade = sharedPreferences.getString(
-                getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default_value));
-
-        String unitType = sharedPreferences.getString(
-                getString(R.string.pref_unit_key),
-                getString(R.string.pref_unit_default_value));
-
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        weatherTask.execute(idCidade, unitType);
+        Intent serviceIntent = new Intent(getActivity(), SunshineService.class);
+        serviceIntent.putExtra(SunshineService.LOCATION_EXTRA, location);
+        getActivity().startService(serviceIntent);
     }
 
     public void onLocationChanged() {
