@@ -66,7 +66,9 @@ public class ForecastAdapter extends CursorAdapter {
         long dateTimeInMillis = cursor.getLong(WeatherContract.Forecast.COL_WEATHER_DATE);
         viewHolder.textDate.setText(Utility.getFriendlyDayString(context, dateTimeInMillis));
 
-        viewHolder.textForecast.setText(cursor.getString(WeatherContract.Forecast.COL_WEATHER_DESC));
+        String description = cursor.getString(WeatherContract.Forecast.COL_WEATHER_DESC);
+        viewHolder.textForecast.setText(description);
+        viewHolder.icon.setContentDescription(description);
 
         boolean isMetric = Utility.isMetric(context);
 
