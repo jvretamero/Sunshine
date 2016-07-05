@@ -1,9 +1,5 @@
 package com.joaoretamero.sunshine.main;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +19,7 @@ import android.widget.ListView;
 
 import com.joaoretamero.sunshine.R;
 import com.joaoretamero.sunshine.data.WeatherContract;
-import com.joaoretamero.sunshine.service.SunshineService;
+import com.joaoretamero.sunshine.sync.SunshineSyncAdapter;
 import com.joaoretamero.sunshine.util.Utility;
 
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -121,13 +117,15 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 //        serviceIntent.putExtra(SunshineService.LOCATION_EXTRA, location);
 //        getActivity().startService(serviceIntent);
 
-        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
-        alarmIntent.putExtra(SunshineService.LOCATION_EXTRA, location);
+//        Intent alarmIntent = new Intent(getActivity(), SunshineService.AlarmReceiver.class);
+//        alarmIntent.putExtra(SunshineService.LOCATION_EXTRA, location);
+//
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+//
+//        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
+        SunshineSyncAdapter.syncNow(getActivity());
     }
 
     public void onLocationChanged() {
