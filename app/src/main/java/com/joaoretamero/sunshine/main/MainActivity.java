@@ -14,6 +14,7 @@ import com.joaoretamero.sunshine.R;
 import com.joaoretamero.sunshine.detail.DetailActivity;
 import com.joaoretamero.sunshine.detail.DetailFragment;
 import com.joaoretamero.sunshine.settings.SettingsActivity;
+import com.joaoretamero.sunshine.sync.SunshineSyncAdapter;
 import com.joaoretamero.sunshine.util.Utility;
 
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
         ForecastFragment forecastFragment = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
         forecastFragment.setUseTodayLayout(!mTwoPane);
+
+        SunshineSyncAdapter.initializeSyncAdapter(MainActivity.this);
     }
 
     @Override
