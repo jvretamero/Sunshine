@@ -26,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
+@Deprecated
 public class SunshineService extends IntentService {
 
     public static final String LOCATION_EXTRA = "location";
