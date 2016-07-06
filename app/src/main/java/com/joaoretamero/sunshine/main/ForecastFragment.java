@@ -1,5 +1,6 @@
 package com.joaoretamero.sunshine.main;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -102,8 +104,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_refresh:
-                updateWeather();
+            case R.id.action_map:
+                openPreferredLocationInMap();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -146,6 +148,27 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if (mForecastAdapter != null) {
             mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         }
+    }
+
+    private void openPreferredLocationInMap() {
+        if (mForecastAdapter != null) {
+            Cursor cursor = mForecastAdapter.getCursor();
+            cursor.moveToPosition(0);
+
+            String latStr = cursor.getString(WeatherContract.Forecast.COL_COORD_LAT);
+            String longStr = cursor.getString(WeatherContract.Forecast.COL_COORD_LONG);
+
+            Uri geoUri = Uri.parse("geo:" + latStr + "," + longStr);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(geoUri);
+
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                startActivity(intent);
+            } else {
+                Log.d(TAG, "openPreferredLocationInMap: Não foi possível exibir no mapa (" + geoUri.toString() + ")");
+            }
+        }
+
     }
 
     public interface Callback {
