@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mLocation = Utility.getPreferredLocation(this);
+        setTheme(R.style.ForecastTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
