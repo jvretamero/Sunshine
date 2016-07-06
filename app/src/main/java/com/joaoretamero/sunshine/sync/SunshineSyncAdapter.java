@@ -118,46 +118,52 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     private void notifyWeather() {
         Context context = getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String lastNotificationKey = context.getString(R.string.pref_last_notification);
-        long lastSync = sharedPreferences.getLong(lastNotificationKey, 0l);
+        
+        String displayNotificationsKey = context.getString(R.string.pref_enable_notifications_key);
+        boolean displayNotificationsDefault = Boolean.parseBoolean(context.getString(R.string.pref_enable_notifications_default));
+        boolean displayNotifications = sharedPreferences.getBoolean(displayNotificationsKey, displayNotificationsDefault);
 
-        if (System.currentTimeMillis() - lastSync > DAY_IN_MILLIS) {
-            String location = Utility.getPreferredLocation(context);
+        if (displayNotifications) {
+            String lastNotificationKey = context.getString(R.string.pref_last_notification);
+            long lastSync = sharedPreferences.getLong(lastNotificationKey, 0l);
+            if (System.currentTimeMillis() - lastSync > DAY_IN_MILLIS) {
+                String location = Utility.getPreferredLocation(context);
 
-            Uri weatherUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(location, System.currentTimeMillis());
-            Cursor cursor = context.getContentResolver().query(weatherUri, NOTIFY_WEATHER_PROJECTION, null, null, null);
+                Uri weatherUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(location, System.currentTimeMillis());
+                Cursor cursor = context.getContentResolver().query(weatherUri, NOTIFY_WEATHER_PROJECTION, null, null, null);
 
-            if (cursor.moveToFirst()) {
-                int weatherId = cursor.getInt(INDEX_WEATHER_ID);
-                double high = cursor.getDouble(INDEX_MAX_TEMP);
-                double low = cursor.getDouble(INDEX_MIN_TEMP);
-                String desc = cursor.getString(INDEX_SHORT_DESC);
+                if (cursor.moveToFirst()) {
+                    int weatherId = cursor.getInt(INDEX_WEATHER_ID);
+                    double high = cursor.getDouble(INDEX_MAX_TEMP);
+                    double low = cursor.getDouble(INDEX_MIN_TEMP);
+                    String desc = cursor.getString(INDEX_SHORT_DESC);
 
-                int iconId = Utility.getIconResourceForWeatherCondition(weatherId);
-                String title = context.getString(R.string.app_name);
-                String hightStr = Utility.formatTemperature(context, high);
-                String lowStr = Utility.formatTemperature(context, low);
-                String contentText = String.format(context.getString(R.string.format_notification), desc, hightStr, lowStr);
+                    int iconId = Utility.getIconResourceForWeatherCondition(weatherId);
+                    String title = context.getString(R.string.app_name);
+                    String hightStr = Utility.formatTemperature(context, high);
+                    String lowStr = Utility.formatTemperature(context, low);
+                    String contentText = String.format(context.getString(R.string.format_notification), desc, hightStr, lowStr);
 
-                Intent detailIntent = new Intent(context, MainActivity.class);
+                    Intent detailIntent = new Intent(context, MainActivity.class);
 
-                TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
-                taskStackBuilder.addNextIntent(detailIntent);
+                    TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+                    taskStackBuilder.addNextIntent(detailIntent);
 
-                PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                        .setSmallIcon(iconId)
-                        .setContentTitle(title)
-                        .setContentText(contentText)
-                        .setContentIntent(pendingIntent);
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                            .setSmallIcon(iconId)
+                            .setContentTitle(title)
+                            .setContentText(contentText)
+                            .setContentIntent(pendingIntent);
 
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-                notificationManager.notify(WEATHER_NOTIFICATION_ID, builder.build());
+                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+                    notificationManager.notify(WEATHER_NOTIFICATION_ID, builder.build());
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putLong(lastNotificationKey, System.currentTimeMillis());
-                editor.commit();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putLong(lastNotificationKey, System.currentTimeMillis());
+                    editor.commit();
+                }
             }
         }
     }
