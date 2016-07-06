@@ -118,7 +118,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     private void notifyWeather() {
         Context context = getContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        
+
         String displayNotificationsKey = context.getString(R.string.pref_enable_notifications_key);
         boolean displayNotificationsDefault = Boolean.parseBoolean(context.getString(R.string.pref_enable_notifications_default));
         boolean displayNotifications = sharedPreferences.getBoolean(displayNotificationsKey, displayNotificationsDefault);
@@ -376,13 +376,16 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                 cVVector.add(weatherValues);
             }
 
-            int inserted = 0;
             // add to database
             if (cVVector.size() > 0) {
                 // Student: call bulkInsert to add the weatherEntries to the database here
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
-                inserted = getContext().getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
+                getContext().getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
+
+                String date = Long.toString(dayTime.setJulianDay(julianStartDay - 1));
+                getContext().getContentResolver().delete(WeatherContract.WeatherEntry.CONTENT_URI,
+                        WeatherContract.WeatherEntry.COLUMN_DATE + " <= ?", new String[]{date});
 
                 notifyWeather();
             }
